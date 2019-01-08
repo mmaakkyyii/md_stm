@@ -2,12 +2,12 @@
 #define _ENCODER_H_
 
 class Encoder{
-public:
+private:
 	int dir;
 	int ppr;
 	int period_ms;
 	float radius;
-private:
+public:
 	Encoder(int _dir, int _ppr, int _period_ms, float _radius);
 	float GetPulse();
 	float GetAngularvelocity();
