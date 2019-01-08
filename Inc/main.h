@@ -49,20 +49,26 @@
 
 /* Private define ------------------------------------------------------------*/
 
-#define IN_B_Pin GPIO_PIN_2
-#define IN_B_GPIO_Port GPIOA
-#define CS_Pin GPIO_PIN_3
-#define CS_GPIO_Port GPIOA
-#define PWM_Pin GPIO_PIN_7
-#define PWM_GPIO_Port GPIOA
-#define EN_Pin GPIO_PIN_0
-#define EN_GPIO_Port GPIOB
-#define IN_A_Pin GPIO_PIN_1
-#define IN_A_GPIO_Port GPIOB
-#define LED1_Pin GPIO_PIN_6
-#define LED1_GPIO_Port GPIOB
-#define LED2_Pin GPIO_PIN_7
-#define LED2_GPIO_Port GPIOB
+#define LED2_Pin GPIO_PIN_0
+#define LED2_GPIO_Port GPIOA
+#define LED1_Pin GPIO_PIN_1
+#define LED1_GPIO_Port GPIOA
+#define MOTOR_IN_B_Pin GPIO_PIN_2
+#define MOTOR_IN_B_GPIO_Port GPIOA
+#define MOTOR_CS_Pin GPIO_PIN_3
+#define MOTOR_CS_GPIO_Port GPIOA
+#define MOTOR_PWM_Pin GPIO_PIN_7
+#define MOTOR_PWM_GPIO_Port GPIOA
+#define MOTOR_EN_Pin GPIO_PIN_0
+#define MOTOR_EN_GPIO_Port GPIOB
+#define MOTOR_IN_A_Pin GPIO_PIN_1
+#define MOTOR_IN_A_GPIO_Port GPIOB
+#define ENC_A_Pin GPIO_PIN_8
+#define ENC_A_GPIO_Port GPIOA
+#define ENC_B_Pin GPIO_PIN_9
+#define ENC_B_GPIO_Port GPIOA
+#define ENC_X_Pin GPIO_PIN_10
+#define ENC_X_GPIO_Port GPIOA
 
 /* ########################## Assert Selection ############################## */
 /**
