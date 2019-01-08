@@ -10,11 +10,14 @@ void Init(){
 }
 
 void Loop(){
-	motor.Drive(1);
 }
 
 void TimerInterrupt(){
 
+	static int d=0;
+	d++;
+	if(d>990)d=0;
 	HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
+	motor.Drive(d);
 
 }

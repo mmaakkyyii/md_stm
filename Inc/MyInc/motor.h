@@ -4,6 +4,7 @@
 class Motor{
 private:
 	int dir;
+	void PWM(int duty);//duty‚Í0~1000
 public:
 	Motor(int _dir);
 
