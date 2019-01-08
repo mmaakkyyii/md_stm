@@ -10,6 +10,8 @@ void Init();
 
 void Loop();
 
+void TimerInterrupt();
+
 #if __cplusplus
 };
 #endif

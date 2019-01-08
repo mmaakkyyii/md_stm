@@ -102,9 +102,11 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM1_Init();
   MX_ADC1_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
 
   Init();
+  HAL_TIM_Base_Start_IT(&htim6);
 
   /* USER CODE END 2 */
 
