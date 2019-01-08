@@ -10,10 +10,14 @@ void Init();
 
 void Loop();
 
+void Debug(char* data,int size);
+
+
 void TimerInterrupt();
 
 #if __cplusplus
 };
 #endif
+
 
 #endif //MAIN_FUNC_H_
