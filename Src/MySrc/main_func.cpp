@@ -37,10 +37,11 @@ void TimerInterrupt(){
 	HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
 	motor.Drive(d);
 
+	encoder.Update();
 	int pulse =encoder.GetPulse();
-	int v=(int)encoder.GetVelocity();
+	int v=(int)(1000*encoder.GetVelocity());
 	char po[20]={};
-	sprintf(po,"%d,%d\r\n",pulse,v);
+	sprintf(po,"%d,%d\r\n",pulse,v );
 	Debug(po,20);
 
 
