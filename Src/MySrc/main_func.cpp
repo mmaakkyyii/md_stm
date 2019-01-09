@@ -8,7 +8,7 @@
 
 
 void Debug(char* data,int size){
-	  HAL_UART_Transmit_IT(&huart1,(uint8_t *)data,(uint16_t)size);
+	HAL_UART_Transmit_IT(&huart1,(uint8_t *)data,(uint16_t)size);
 }
 
 
