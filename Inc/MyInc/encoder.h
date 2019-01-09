@@ -9,7 +9,7 @@ private:
 	float radius;
 public:
 	Encoder(int _dir, int _ppr, int _period_ms, float _radius);
-	float GetPulse();
+	int GetPulse();
 	float GetAngularvelocity();
 	float GetVelocity();
 };

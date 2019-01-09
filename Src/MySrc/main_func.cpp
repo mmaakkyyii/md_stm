@@ -8,7 +8,9 @@
 
 
 void Debug(char* data,int size){
+	HAL_TIM_Encoder_Start(&htim1,TIM_CHANNEL_ALL);
 	HAL_UART_Transmit_IT(&huart1,(uint8_t *)data,(uint16_t)size);
+
 }
 
 
@@ -30,13 +32,16 @@ void TimerInterrupt(){
 	static int d=0;
 	d++;
 	if(d>990){
-		char po[10];
-		sprintf(po,"%d\r\n",d);
-		Debug(po,10);
 		d=0;
 	}
 	HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
 	motor.Drive(d);
+
+	int pulse =encoder.GetPulse();
+	int v=(int)encoder.GetVelocity();
+	char po[20]={};
+	sprintf(po,"%d,%d\r\n",pulse,v);
+	Debug(po,20);
 
 
 }
