@@ -1,9 +1,12 @@
 #include "motor.h"
 #include "tim.h"
+#include "gpio.h"
+
 
 Motor::Motor(int _dir){
 	if(_dir == 1 || _dir == -1)dir=_dir;
 	else dir=1;
+
 }
 
 void Motor::PWM(int duty){
@@ -22,5 +25,14 @@ void Motor::PWM(int duty){
 void Motor::Drive(float duty){
 	duty*=dir;
 	PWM(duty);
+	HAL_GPIO_WritePin(MOTOR_EN_GPIO_Port, MOTOR_EN_Pin,GPIO_PIN_SET);
+
+	if(duty<0){
+		HAL_GPIO_WritePin(MOTOR_IN_A_GPIO_Port, MOTOR_IN_A_Pin,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(MOTOR_IN_B_GPIO_Port, MOTOR_IN_B_Pin,GPIO_PIN_RESET);
+	}else{
+		HAL_GPIO_WritePin(MOTOR_IN_A_GPIO_Port, MOTOR_IN_A_Pin,GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(MOTOR_IN_B_GPIO_Port, MOTOR_IN_B_Pin,GPIO_PIN_SET);
+	}
 
 }
