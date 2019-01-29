@@ -34,13 +34,6 @@ void Init(){
 
 void Loop(){
 	HAL_SPI_Receive(&hspi1,spi_buff,spi_data_size,10);
-	static int neko=0;
-	neko++;
-	if(neko>100){
-		neko=0;
-		HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
-		HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
-	}
 }
 
 
@@ -62,14 +55,21 @@ void TimerInterrupt(){//10ms‚¨‚«‚ÉŒÄ‚Î‚ê‚é
 	static int d=0;
 	static int dir=1;
 	d+=dir;
-	if(d>990){
+	if(d>1990){
 		dir=-4;
 	}
-	if(d<-990){
+	if(d<-1990){
 		dir=4;
 	}
-//	HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
-	motor.Drive(500);
+
+	static int neko=0;
+	neko++;
+	if(neko>50){
+		neko=0;
+		HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
+	}
+	HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
+	motor.Drive(d);
 
 	encoder.Update();
 	int pulse =encoder.GetPulse();
