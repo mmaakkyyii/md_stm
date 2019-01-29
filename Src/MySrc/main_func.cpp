@@ -57,7 +57,7 @@ void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi){
 }
 
 
-void TimerInterrupt(){
+void TimerInterrupt(){//10ms‚¨‚«‚ÉŒÄ‚Î‚ê‚é
 
 	static int d=0;
 	static int dir=1;

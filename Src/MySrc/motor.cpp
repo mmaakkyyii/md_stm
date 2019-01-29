@@ -2,7 +2,6 @@
 #include "tim.h"
 #include "gpio.h"
 
-
 Motor::Motor(int _dir){
 	if(_dir == 1 || _dir == -1)dir=_dir;
 	else dir=1;
@@ -22,7 +21,7 @@ void Motor::PWM(int duty){
 	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_2);
 
 }
-void Motor::Drive(float duty){
+void Motor::Drive(float duty){//0~2400
 	duty*=dir;
 	PWM(duty);
 	HAL_GPIO_WritePin(MOTOR_EN_GPIO_Port, MOTOR_EN_Pin,GPIO_PIN_SET);
