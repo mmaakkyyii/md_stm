@@ -1,16 +1,22 @@
 #include "encoder.h"
 #include "tim.h"
 
+static const int16_t ENC_ZERO=0x7FFF;
+
 Encoder::Encoder(int _dir, int _ppr, int _period_ms, float _radius):
 	ppr(_ppr),period_ms(_period_ms),radius(_radius){
 	if(_dir==1 || _dir==-1)dir=_dir;
-}
 
-static const int16_t ENC_ZERO=0x7FFF;
+	pulse=TIM1->CNT;
+	TIM1->CNT=ENC_ZERO;
+
+}
 
 void Encoder::Update(){
 	pulse=TIM1->CNT;
 	TIM1->CNT=ENC_ZERO;
+
+	theta+=GetPulse();
 }
 int Encoder::GetPulse(){
 	return pulse-ENC_ZERO;

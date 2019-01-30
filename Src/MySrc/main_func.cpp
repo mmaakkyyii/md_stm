@@ -23,6 +23,7 @@ void Init(){
 
     HAL_SPI_Receive_IT(&hspi1, spi_buff, spi_data_size);//Start the receiving process?
 	HAL_TIM_Encoder_Start(&htim1,TIM_CHANNEL_ALL);
+	encoder.Update();
 
 	HAL_TIM_Base_Start_IT(&htim6);
 
@@ -52,31 +53,38 @@ void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi){
 
 void TimerInterrupt(){//10ms‚¨‚«‚ÉŒÄ‚Î‚ê‚é
 
+	static float ref_v=100;
 	static int d=0;
 	static int dir=1;
 	d+=dir;
 	if(d>1990){
-		dir=-4;
+		dir=-10;
 	}
 	if(d<-1990){
-		dir=4;
+		dir=10;
 	}
 
 	static int neko=0;
 	neko++;
-	if(neko>50){
+	if(neko>500){
 		neko=0;
+		ref_v+=100;
+		if(ref_v>600)ref_v=0;
 		HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
 	}
 	HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
-	motor.Drive(d);
+
+	controller.SetReference(ref_v);
 
 	encoder.Update();
-	int pulse =encoder.GetPulse();
-	int v=(int)(1000*encoder.GetVelocity());
+	float v=encoder.GetVelocity();
+	float output = controller.Update(v);
+
+	motor.Drive(output);
+
 
 	char po[20]={};
-	int num = sprintf(po,"%d\r\n",v);
+	int num = sprintf(po,"%d,%d\r\n",(int)ref_v,(int)v);
 
 	Debug(po,num);
 

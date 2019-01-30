@@ -23,7 +23,7 @@ void Motor::PWM(int duty){
 }
 void Motor::Drive(float duty){//0~2400
 	duty*=dir;
-	PWM(duty);
+	PWM((int)duty);
 	HAL_GPIO_WritePin(MOTOR_EN_GPIO_Port, MOTOR_EN_Pin,GPIO_PIN_SET);
 
 	if(duty<0){
