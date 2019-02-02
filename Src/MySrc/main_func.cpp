@@ -82,9 +82,10 @@ void TimerInterrupt(){//10ms‚¨‚«‚ÉŒÄ‚Î‚ê‚é
 
 	motor.Drive(output);
 
+	int vel=(int16_t)((((uint16_t)spi_buff[0])<<8) |((uint16_t)spi_buff[1]));
 
 	char po[20]={};
-	int num = sprintf(po,"%d,%d\r\n",(int)ref_v,(int)v);
+	int num = sprintf(po,"%d\r\n",(int)vel);
 
 	Debug(po,num);
 
