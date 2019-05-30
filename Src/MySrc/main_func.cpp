@@ -15,8 +15,8 @@ void Debug(char* data,int size){
 }
 
 
-uint8_t spi_buff[2];
-int spi_data_size=2;
+uint8_t spi_buff[3];
+int spi_data_size=3;
 
 void Init(){
 
@@ -34,7 +34,7 @@ void Init(){
 }
 
 void Loop(){
-	HAL_SPI_Receive(&hspi1,spi_buff,spi_data_size,10);
+	HAL_SPI_Receive(&hspi1,spi_buff,spi_data_size,4);
 }
 
 
@@ -52,29 +52,19 @@ void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi){
 
 
 void TimerInterrupt(){//10ms‚¨‚«‚ÉŒÄ‚Î‚ê‚é
+	static int pre_data=0;
+//	static float ref_v=100;
 
-	static float ref_v=100;
-	static int d=0;
-	static int dir=1;
-	d+=dir;
-	if(d>1990){
-		dir=-10;
-	}
-	if(d<-1990){
-		dir=10;
+	int vel=(int16_t)((((uint16_t)spi_buff[0])<<8) |((uint16_t)spi_buff[1]));
+	if((spi_buff[0]&spi_buff[1])==spi_buff[2]){
+		pre_data=vel;
+		HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,GPIO_PIN_RESET);
+	}else{
+		vel=pre_data;
+		HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,GPIO_PIN_SET);
 	}
 
-	static int neko=0;
-	neko++;
-	if(neko>500){
-		neko=0;
-		ref_v+=100;
-		if(ref_v>600)ref_v=0;
-		HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
-	}
-	HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
-
-	controller.SetReference(ref_v);
+	controller.SetReference(vel);
 
 	encoder.Update();
 	float v=encoder.GetVelocity();
@@ -82,10 +72,8 @@ void TimerInterrupt(){//10ms‚¨‚«‚ÉŒÄ‚Î‚ê‚é
 
 	motor.Drive(output);
 
-	int vel=(int16_t)((((uint16_t)spi_buff[0])<<8) |((uint16_t)spi_buff[1]));
-
 	char po[20]={};
-	int num = sprintf(po,"%d\r\n",(int)vel);
+	int num = sprintf(po,"%d,%d,%d\r\n",(int)vel,(int)v);
 
 	Debug(po,num);
 
