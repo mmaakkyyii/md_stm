@@ -47,8 +47,6 @@ void TimerInterrupt(){//10ms‚¨‚«‚ÉŒÄ‚Î‚ê‚é
 
 	int vel=(int16_t)((((uint16_t)spi_buff[0])<<8) |((uint16_t)spi_buff[1]));
 
-	char po[20]={};
-	int num = sprintf(po,"%d,%d\r\n",(int)vel,(int)spi_buff[2]);
 
 	if(spi_buff[2]==0xff){
 		pre_data=vel;
@@ -68,10 +66,13 @@ void TimerInterrupt(){//10ms‚¨‚«‚ÉŒÄ‚Î‚ê‚é
 	encoder.Update();
 	float v=encoder.GetVelocity();
 	float output = 0;
-	if(spi_buff[2]!=0xf0)output=controller.Update(v);
+	if(spi_buff[2]!=0xff){
+		output=controller.Update(v);
+		motor.Drive(output);
+	}
 
-	motor.Drive(output);
-
+	char po[20]={};
+	int num = sprintf(po,"%d,%d\r\n",(int)vel,(int)v);
 
 	Debug(po,num);
 
