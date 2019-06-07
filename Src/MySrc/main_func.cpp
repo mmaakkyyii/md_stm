@@ -45,19 +45,26 @@ void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi){
 void TimerInterrupt(){//10ms‚¨‚«‚ÉŒÄ‚Î‚ê‚é
 	static int pre_data=0;
 
-	int vel=(int16_t)((((uint16_t)spi_buff[0])<<8) |((uint16_t)spi_buff[1]));
+	uint8_t spi[3];
+	spi[0]=spi_buff[0];
+	spi[1]=spi_buff[1];
+	spi[2]=spi_buff[2];
+	if(spi[0]==spi[1] && spi[1]==spi[2])spi[2]=1;
+
+	int vel=(int16_t)((((uint16_t)spi[0])<<8) |((uint16_t)spi[1]));
+	int rx_state=spi[2];
 
 
-	if(spi_buff[2]==0xff){
+	if(spi[2]==spi[0]^spi[1]){
 		pre_data=vel;
 		HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,GPIO_PIN_SET);
-		spi_buff[2]=0;
-	}else if(spi_buff[2]==0xf0){
+		spi[2]=0xaa;
+	}else if(spi[2]==0xf0){
 		HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,GPIO_PIN_RESET);
 	}else{
 		vel=pre_data;
 		HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,GPIO_PIN_RESET);
-		spi_buff[2]=0;
+		spi[2]=0xaa;
 	}
 
 
@@ -66,13 +73,13 @@ void TimerInterrupt(){//10ms‚¨‚«‚ÉŒÄ‚Î‚ê‚é
 	encoder.Update();
 	float v=encoder.GetVelocity();
 	float output = 0;
-	if(spi_buff[2]!=0xff){
+	if(rx_state==spi[0]^spi[1]){
 		output=controller.Update(v);
 		motor.Drive(output);
 	}
 
 	char po[20]={};
-	int num = sprintf(po,"%d,%d\r\n",(int)vel,(int)v);
+	int num = sprintf(po,"%d,%d,%d\r\n",(int)vel,(int)v,(int)rx_state);
 
 	Debug(po,num);
 
