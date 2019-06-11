@@ -1,6 +1,7 @@
 #include "main_func.h"
 #include "my_variable.h"
 #include "motor.h"
+#include "math.h"
 
 #include "gpio.h"
 #include "tim.h"
@@ -78,11 +79,15 @@ void TimerInterrupt(){//10ms‚¨‚«‚ÉŒÄ‚Î‚ê‚é
 	float output = 0;
 	if(rx_state==spi[0]^spi[1]){
 		output=controller.Update(v);
+		const int lim=120;
+		if(output<lim && output>-lim){
+			output=lim*(-std::pow((output/lim-1),2)+1);
+		}
 		motor.Drive(output);
 	}
 
 	char po[20]={};
-	int num = sprintf(po,"%d,%d,%d\r\n",(int)vel,(int)v,(int)rx_state);
+	int num = sprintf(po,"%d,%d\r\n",(int)vel,(int)v);
 
 	Debug(po,num);
 
