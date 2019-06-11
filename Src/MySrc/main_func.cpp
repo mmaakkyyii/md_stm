@@ -55,6 +55,7 @@ void TimerInterrupt(){//10msおきに呼ばれる
 	int vel=(int16_t)((((uint16_t)spi[0])<<8) |((uint16_t)spi[1]));
 	int rx_state=spi[2];
 
+	if((pre_data-vel>100)||(pre_data-vel<-100))vel=pre_data; //目標値の変化量が大きすぎるときは通信が怪しいのでそのままの値にする
 
 	if(spi[2]==spi[0]^spi[1]){
 		pre_data=vel;
@@ -67,6 +68,7 @@ void TimerInterrupt(){//10msおきに呼ばれる
 		HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,GPIO_PIN_RESET);
 		spi[2]=0xaa;
 	}
+
 
 
 	controller.SetReference(vel);
