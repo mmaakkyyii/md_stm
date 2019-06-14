@@ -56,7 +56,7 @@ void TimerInterrupt(){//10msおきに呼ばれる
 	int vel=(int16_t)((((uint16_t)spi[0])<<8) |((uint16_t)spi[1]));
 	int rx_state=spi[2];
 
-	if((pre_data-vel>100)||(pre_data-vel<-100))vel=pre_data; //目標値の変化量が大きすぎるときは通信が怪しいのでそのままの値にする
+	if((pre_data-vel>200)||(pre_data-vel<-200))vel=pre_data; //目標値の変化量が大きすぎるときは通信が怪しいのでそのままの値にする
 
 	if(spi[2]==spi[0]^spi[1]){
 		pre_data=vel;
@@ -80,8 +80,10 @@ void TimerInterrupt(){//10msおきに呼ばれる
 	if(rx_state==spi[0]^spi[1]){
 		output=controller.Update(v);
 		const int lim=120;
-		if(output<lim && output>-lim){
+		if(0<output && output<lim){
 			output=lim*(-std::pow((output/lim-1),2)+1);
+		}else if(-lim<output && output<0){
+			output=lim*(std::pow((output/lim+1),2)-1);
 		}
 		motor.Drive(output);
 	}
